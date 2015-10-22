@@ -53,10 +53,9 @@ def new(fp, dic=None):
                 stream.append(dic)
 
             json.dump(stream, streamWriter, indent=2)
+            streamWriter.close()
     except PermissionError as error:
         print(error)
-    else:
-        streamWriter.close()
 
 
 def put(dic, fp):
@@ -73,22 +72,22 @@ def put(dic, fp):
                 stream.extend(json.load(streamReader))
                 stream.append(dic)
 
-                streamReader.close()
-
             try:
                 with open(fp, "r+") as streamWriter:
                     json.dump(stream, streamWriter, indent=2)
-                streamWriter.close()
+                    streamWriter.close()
 
             except PermissionError as error:
                 print(error)
             except IOError as error:
                 print(error)
+            finally:
+                streamReader.close()
     except IOError as error:
         print(error)
 
 
-def delete(key, fp):
+def delete(dic, fp):
     import json
 
     try:
@@ -97,16 +96,16 @@ def delete(key, fp):
         with open(fp, "r") as streamReader:
             stream.extend(json.load(streamReader))
 
-            for r in [s for s in stream if s == key]:
+            for r in [s for s in stream if s == dic]:
                 stream.pop(stream.index(r))
 
-            try:
-                with open(fp, "w") as streamWriter:
-                    json.dump(stream, streamWriter, indent=2)
-            except IOError as error:
-                print(error)
+        try:
+            with open(fp, "w") as streamWriter:
+                json.dump(stream, streamWriter, indent=2)
+                streamWriter.close()
+        except PermissionError as error:
+            print(error)
+        finally:
+            streamReader.close()
     except IOError as error:
         print(error)
-    finally:
-        streamReader.close()
-        streamWriter.close()
