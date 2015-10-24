@@ -1,6 +1,7 @@
 def all(fp):
     """
     Retorna toda la coleccion de objetos (dict)
+
     :param fp:
     :type fp:
     :return:Lista iterable de objetos (dict)
@@ -38,7 +39,7 @@ def get(key, fp):
         streamReader.close()
 
 
-def new(fp, dic=None):
+def _new(fp, dic=None):
     import json
     import os
 
@@ -58,13 +59,13 @@ def new(fp, dic=None):
         print(error)
 
 
-def put(dic, fp):
+def add(dic, fp):
     import os
     import json
 
     try:
         if not os.path.exists(fp):
-            new(fp, dic)
+            _new(fp, dic)
         else:
             stream = []
 
